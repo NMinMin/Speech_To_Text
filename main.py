@@ -1,11 +1,12 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File
 import httpx
 import os
 
 app = FastAPI()
 
 HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-API_URL = "https://api-inference.huggingface.co/models/openai/whisper-large-v3"
+# Cập nhật URL Router mới của Hugging Face
+API_URL = "https://router.huggingface.co/hf-inference/models/openai/whisper-large-v3"
 
 @app.get("/")
 def root():
@@ -21,8 +22,6 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     try:
         audio_data = await file.read()
-        
-        # Nhận diện Content-Type tự động (hỗ trợ cả audio/mpeg cho file mp3)
         content_type = file.content_type or "audio/mpeg"
         
         headers = {
